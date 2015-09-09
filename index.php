@@ -1,2 +1,6 @@
 <?php
-echo 'Hello there! This is my new framework! SO MUCH FUNCTIONALITY!!11';
+require_once('bootstrap.php');
+$config = require_once('app' . DIRECTORY_SEPARATOR . 'Config.php');
+
+$app = new App();
+$app->run($config, $_SERVER);
