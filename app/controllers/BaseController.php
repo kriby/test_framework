@@ -8,7 +8,12 @@ class BaseController
     public function __construct($model, $action = 'Base')
     {
         $this->model = new $model();
+        $this->action = $action;
         $this->template = new Template();
-        $this->template->render($action);
+    }
+
+    public function baseAction()
+    {
+        $this->template->render($this->action);
     }
 }

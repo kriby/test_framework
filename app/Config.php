@@ -1,4 +1,4 @@
 <?php
 return [
-    'defaultController' => 'Base'
+    'default' => 'Base'
 ];
