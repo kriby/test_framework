@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require('bootstrap.php');
 
-$config = require_once('app' . DIRECTORY_SEPARATOR . 'Config.php');
+$config = ['default' => 'Base'];
 
-$app = new App();
+$app = new \App\App();
 $app->run($config, $_SERVER);
