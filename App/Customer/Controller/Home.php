@@ -1,44 +1,16 @@
 <?php
 namespace App\Customer\Controller;
 
-use App\Customer\Model\Collage;
-use App\Customer\View\Collage as CollageView;
+use \App\Customer\View\Home as HomeView;
 
 class Home
 {
-    /**
-     * @var \App\Customer\Model\Collage
-     */
-    private $collage;
-
-    /**
-     * @var CollageView
-     */
-    private $collageView;
-
-    /**
-     * @var int
-     */
-    private $height;
-
-    /**
-     * @var int
-     */
-    private $width;
-
-
-    public function __construct()
-    {
-        $this->height = 400;
-        $this->width = 200;
-    }
-
     public function execute()
     {
-        $this->collage = new Collage();
-        $this->collageView = new CollageView();
-        $collage = $this->collage->drawCollage($this->height, $this->width);
-        $this->collageView->render($collage);
-
+        if (!isset($_SESSION['access_token']) && !isset($_SESSION['access_token_secret'])) {
+            header("Location: customer/login");
+        }
+        $homeView = new HomeView();
+        $homeView->render();
     }
 }

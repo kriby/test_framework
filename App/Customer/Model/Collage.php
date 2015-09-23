@@ -15,6 +15,7 @@ class Collage
      * @param $x
      * @param $y
      * @return resource
+     * @throws \Exception
      */
     public function drawCollage($x, $y)
     {
@@ -22,6 +23,9 @@ class Collage
         $friends = $this->getFriendsList($username);
         $posX = 0;
         $posY = 0;
+        if(!isset($x) && !isset($y)) {
+            throw new \Exception("height and width must be set!");
+        }
         $collage = imagecreatetruecolor($x, $y);
 
         while ($posY <= $y) {

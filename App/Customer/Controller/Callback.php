@@ -9,6 +9,6 @@ class Callback
     {
         $authorization = new Authorization();
         $authorization->getAccessToken();
-        header("Location: customer/home");
+        header("Location: home");
     }
 }
