@@ -3,52 +3,23 @@ namespace App;
 
 class Router
 {
-    private $controllerName;
-    private $actionName;
-    private $queryString;
+    private $controller;
 
     /**
      * @return mixed
      */
     public function getControllerName()
     {
-        return $this->controllerName;
+        return $this->controller;
     }
 
     /**
-     * @return mixed
-     */
-    public function getActionName()
-    {
-        return $this->actionName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getQueryString()
-    {
-        return $this->queryString;
-    }
-
-    /**
-     * @param $url
+     * @param $server
      * @return bool
      */
-    public function parseUrl($url)
+    public function parseUrl($server)
     {
-        $url = explode('/', trim($url, '//'));
-        array_shift($url); /** remove test_framework before request */
-        $this->controllerName = ucwords(array_shift($url));
-        $this->actionName = ucwords(array_shift($url));
-        $this->queryString = $url;
-        if (!file_exists(
-            ROOT . DS . 'App' . DS . $this->controllerName . DS . 'Controller' . DS . $this->actionName . '.php'
-        )) {
-            return false;
-        } else {
-            $this->controllerName = 'App\\' . $this->controllerName . '\\' . 'Controller\\' . $this->actionName;
-            return true;
-        }
+        $path = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
+        $this->controller = 'App\\' . ucwords($path[0]) . '\\' . 'Controller\\' . ucwords($path[1]);
     }
 }
