@@ -1,17 +1,19 @@
 <?php
 
-namespace App;
+namespace App\Request;
 
+use App\Container;
 
-class ControllerFactory
+class ActionFactory implements ActionFactoryInterface
 {
     /**
-     * @var Container
+     * @var \App\Container
      */
     private $container;
 
     /**
      * ControllerFactory constructor.
+     *
      * @param Container $container
      */
     public function __construct(Container $container)
@@ -22,7 +24,7 @@ class ControllerFactory
 
     /**
      * @param $name
-     * @return mixed
+     * @return object
      */
     public function create($name)
     {

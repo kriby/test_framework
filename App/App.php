@@ -9,29 +9,34 @@ class App
     private $router;
 
     /**
-     * @var ControllerFactory
+     * @var \App\Request\ActionFactory
      */
-    private $controllerFactory;
+    private $actionFactory;
 
     /**
      * App constructor.
      *
      * @param \App\Router $router
-     * @param ControllerFactory $controllerFactory
+     * @param \App\Request\ActionFactory $actionFactory
      */
-    public function __construct(Router $router, ControllerFactory $controllerFactory)
+    public function __construct(Router $router, Request\ActionFactory $actionFactory)
     {
         $this->router = $router;
-        $this->controllerFactory = $controllerFactory;
+        $this->actionFactory = $actionFactory;
     }
 
+    /**
+     * Main method for running application.
+     *
+     * @param $server
+     */
     public function run($server)
     {
         try {
             $parsedUrl = $this->router->parseUrl($server);
             $controller = $this->mapPathOnClass($parsedUrl);
 
-            $controller = $this->controllerFactory->create($controller);
+            $controller = $this->actionFactory->create($controller);
             $controller->execute();
         } catch (\Exception $e) {
             echo $e->getMessage();
