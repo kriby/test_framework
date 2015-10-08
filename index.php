@@ -5,4 +5,4 @@ require('bootstrap.php');
 
 $bootstrap = new \App\Bootstrap;
 $app = $bootstrap->createApplication('\\App\\App');
-$app->run($config, $_SERVER);
+$app->run($_SERVER);

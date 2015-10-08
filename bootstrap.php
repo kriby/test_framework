@@ -8,6 +8,3 @@ const CONSUMER_KEY = 'SCIFEMlr85WbAgESqhcEHeVHu';
 const CONSUMER_SECRET = '9I1MBrsYWQTA4VRzJCWar1qsK2lgsxLfmN1U1UQGOmgFXpJ4iC';
 
 require_once('vendor' . DS . 'autoload.php');
-
-$config = ['default' => 'App\\Customer\\Controller\\Home'];
-

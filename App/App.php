@@ -3,30 +3,43 @@ namespace App;
 
 class App
 {
+    /**
+     * @var Router
+     */
     private $router;
+
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * App constructor.
      * @param \App\Router $router
+     * @param Container $container
      */
-    public function __construct(Router $router)
+    public function __construct(Router $router, Container $container)
     {
         $this->router = $router;
+        $this->container = $container;
     }
 
-    public function run($config, $server)
+    public function run($server)
     {
         try {
-            if (!$this->router->parseUrl($server)) {
-                $controller = $config['default'];
-            } else {
-                $controller = $this->router->getControllerName();
-            }
-            $controller = new $controller();
+            $parsedUrl = $this->router->parseUrl($server);
+            $controller = $this->mapPathOnClass($parsedUrl);
+
+            $controller = $this->container->get($controller);
             $controller->execute();
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
 
+    }
+
+    private function mapPathOnClass($parsedUrl)
+    {
+        return 'App\\' . $parsedUrl['module'] . '\\' . 'Controller\\' . $parsedUrl['action'];
     }
 }
