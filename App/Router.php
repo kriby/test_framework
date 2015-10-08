@@ -4,7 +4,7 @@ namespace App;
 class Router
 {
     /**
-     * Method parses requested url and returns an array with Module name and Action name
+     * Method parses requested url and returns an array with Module name and Action name.
      *
      * @param $server
      * @return array

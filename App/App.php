@@ -9,19 +9,20 @@ class App
     private $router;
 
     /**
-     * @var Container
+     * @var ControllerFactory
      */
-    private $container;
+    private $controllerFactory;
 
     /**
      * App constructor.
+     *
      * @param \App\Router $router
-     * @param Container $container
+     * @param ControllerFactory $controllerFactory
      */
-    public function __construct(Router $router, Container $container)
+    public function __construct(Router $router, ControllerFactory $controllerFactory)
     {
         $this->router = $router;
-        $this->container = $container;
+        $this->controllerFactory = $controllerFactory;
     }
 
     public function run($server)
@@ -30,7 +31,7 @@ class App
             $parsedUrl = $this->router->parseUrl($server);
             $controller = $this->mapPathOnClass($parsedUrl);
 
-            $controller = $this->container->get($controller);
+            $controller = $this->controllerFactory->create($controller);
             $controller->execute();
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -38,6 +39,12 @@ class App
 
     }
 
+    /**
+     * Method maps url on controller class to be created.
+     *
+     * @param $parsedUrl
+     * @return string
+     */
     private function mapPathOnClass($parsedUrl)
     {
         return 'App\\' . $parsedUrl['module'] . '\\' . 'Controller\\' . $parsedUrl['action'];
