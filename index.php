@@ -4,5 +4,5 @@ ini_set('display_errors', 1);
 require('bootstrap.php');
 
 $bootstrap = new \App\Bootstrap;
-$app = $bootstrap->createApplication('\\App\\App');
+$app = $bootstrap->createApplication('\App\App');
 $app->run($_SERVER);

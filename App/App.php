@@ -17,9 +17,9 @@ class App
      * App constructor.
      *
      * @param \App\Router $router
-     * @param \App\Request\ActionFactory $actionFactory
+     * @param \App\Request\ActionFactoryInterface $actionFactory
      */
-    public function __construct(Router $router, Request\ActionFactory $actionFactory)
+    public function __construct(Router $router, Request\ActionFactoryInterface $actionFactory)
     {
         $this->router = $router;
         $this->actionFactory = $actionFactory;

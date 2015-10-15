@@ -1,16 +1,23 @@
 <?php
 namespace App;
 
+use App\Config\XmlReader;
+
 class Container
 {
     /**
      * @var array
      */
     private $objects = [];
+    /**
+     * @var XmlReader
+     */
+    private $xmlReader;
 
     public function __construct()
     {
         $this->objects[get_class($this)] = $this;
+        $this->xmlReader = new XmlReader;
     }
 
     /**
@@ -48,15 +55,20 @@ class Container
     /**
      * Method returns an array with instances of requested arguments.
      *
-     * @param $params
+     * @param \ReflectionParameter[] $params
      * @return array
      */
-    private function resolveArguments($params)
+    private function resolveArguments(array $params)
     {
         $result = [];
         if ($params) {
             foreach ($params as $param) {
-                $result[] = $this->get($param->getClass()->name);
+                if($param->getClass()->isInterface()) {
+                    $className = $this->xmlReader->getPreference($param->getClass()->name);
+                } else {
+                    $className = $param->getClass()->name;
+                }
+                $result[] = $this->get($className);
             }
         }
         return $result;

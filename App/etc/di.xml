@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <preference for="App\Request\ActionFactoryInterface" type="App\Request\ActionFactory" />
+</config>

@@ -5,8 +5,8 @@ class Bootstrap
 {
     public function createApplication($applicationName)
     {
-        $oiC = new Container();
-        return $oiC->create($applicationName);
+        $container = new Container();
+        return $container->create($applicationName);
     }
 
 }
