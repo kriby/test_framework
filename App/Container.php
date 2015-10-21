@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+use App\Config\XmlConverter;
 use App\Config\XmlReader;
 
 class Container
@@ -9,15 +10,22 @@ class Container
      * @var array
      */
     private $objects = [];
+
     /**
      * @var XmlReader
      */
     private $xmlReader;
 
+    /**
+     * @var XmlConverter
+     */
+    private $xmlConverter;
+
     public function __construct()
     {
         $this->objects[get_class($this)] = $this;
         $this->xmlReader = new XmlReader;
+        $this->xmlConverter = new XmlConverter();
     }
 
     /**
@@ -64,7 +72,8 @@ class Container
         if ($params) {
             foreach ($params as $param) {
                 if($param->getClass()->isInterface()) {
-                    $className = $this->xmlReader->getPreference($param->getClass()->name);
+                    $config = $this->xmlConverter->convert($this->xmlReader->read());
+                    $className = $this->getPreference($config, $param->getClass()->name);
                 } else {
                     $className = $param->getClass()->name;
                 }
@@ -72,5 +81,15 @@ class Container
             }
         }
         return $result;
+    }
+
+    private function getPreference($config, $interface)
+    {
+        foreach($config as $for => $type) {
+            if($for == $interface) {
+                return $type;
+            }
+        }
+
     }
 }

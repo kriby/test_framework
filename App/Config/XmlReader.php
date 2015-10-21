@@ -11,7 +11,7 @@ class XmlReader implements AbstractReaderInterface
      * @param $config
      * @return \DOMDocument
      */
-    public function loadConfig($config)
+    private function loadConfig($config)
     {
         $dom = new \DOMDocument();
         $dom->load($config);
@@ -19,17 +19,13 @@ class XmlReader implements AbstractReaderInterface
     }
 
     /**
-     * @param $for
-     * @return string
+     * Method reads preference for interface from xml configuration file.
+     *
+     * @return \DomNodeList
      */
-    public function getPreference($for)
+    public function read()
     {
         $preferences = $this->loadConfig(ROOT . self::XML_CONFIG);
-        $preferences = $preferences->getElementsByTagName('preference');
-        foreach($preferences as $preference) {
-            if($preference->getAttribute('for') == $for) {
-                return $preference->getAttribute('type');
-            }
-        }
+        return $preferences->getElementsByTagName('preference');
     }
 }
