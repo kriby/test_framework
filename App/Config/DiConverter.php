@@ -2,18 +2,18 @@
 namespace App\Config;
 
 
-class XmlConverter implements ConverterInterface
+class DiConverter implements ConverterInterface
 {
     /**
      * Method converts \DomDocument to array.
      *
-     * @param \DomNodeList $source
+     * @param \DomNodeList $nodeList
      * @return array
      */
-    public function convert(\DomNodeList $source)
+    public function convert(\DomNodeList $nodeList)
     {
         $result = [];
-        foreach($source as $preference) {
+        foreach($nodeList as $preference) {
             $result[$preference->getAttribute('for')] = $preference->getAttribute('type');
         }
         return $result;

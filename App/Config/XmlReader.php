@@ -5,8 +5,6 @@ namespace App\Config;
 
 class XmlReader implements AbstractReaderInterface
 {
-    const XML_CONFIG = '/App/etc/di.xml';
-
     /**
      * @param $config
      * @return \DOMDocument
@@ -19,13 +17,15 @@ class XmlReader implements AbstractReaderInterface
     }
 
     /**
-     * Method reads preference for interface from xml configuration file.
+     * Method reads data from xml configuration file.
      *
+     * @param $data
+     * @param $source
      * @return \DomNodeList
      */
-    public function read()
+    public function read($data, $source)
     {
-        $preferences = $this->loadConfig(ROOT . self::XML_CONFIG);
-        return $preferences->getElementsByTagName('preference');
+        $preferences = $this->loadConfig($source);
+        return $preferences->getElementsByTagName($data);
     }
 }

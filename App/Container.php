@@ -1,11 +1,13 @@
 <?php
 namespace App;
 
-use App\Config\XmlConverter;
+use App\Config\DiConverter;
 use App\Config\XmlReader;
 
 class Container
 {
+    const XML_CONFIG = '/App/etc/di.xml';
+
     /**
      * @var array
      */
@@ -17,7 +19,7 @@ class Container
     private $xmlReader;
 
     /**
-     * @var XmlConverter
+     * @var DiConverter
      */
     private $xmlConverter;
 
@@ -25,7 +27,7 @@ class Container
     {
         $this->objects[get_class($this)] = $this;
         $this->xmlReader = new XmlReader;
-        $this->xmlConverter = new XmlConverter();
+        $this->xmlConverter = new DiConverter();
     }
 
     /**
@@ -72,7 +74,9 @@ class Container
         if ($params) {
             foreach ($params as $param) {
                 if($param->getClass()->isInterface()) {
-                    $config = $this->xmlConverter->convert($this->xmlReader->read());
+                    $config = $this->xmlConverter->convert(
+                        $this->xmlReader->read('preference', ROOT . self::XML_CONFIG)
+                    );
                     $className = $this->getPreference($config, $param->getClass()->name);
                 } else {
                     $className = $param->getClass()->name;

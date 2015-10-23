@@ -33,8 +33,7 @@ class App
     public function run($server)
     {
         try {
-            $parsedUrl = $this->router->parseUrl($server);
-            $controller = $this->mapPathOnClass($parsedUrl);
+            $controller = $this->router->parseUrl($server);
 
             $controller = $this->actionFactory->create($controller);
             $controller->execute();
@@ -42,16 +41,5 @@ class App
             echo $e->getMessage();
         }
 
-    }
-
-    /**
-     * Method maps url on controller class to be created.
-     *
-     * @param $parsedUrl
-     * @return string
-     */
-    private function mapPathOnClass($parsedUrl)
-    {
-        return 'App\\' . $parsedUrl['module'] . '\\' . 'Controller\\' . $parsedUrl['action'];
     }
 }

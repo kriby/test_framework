@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <preference for="App\Request\ActionFactoryInterface" type="App\Request\ActionFactory" />
+    <preference for="App\Config\AbstractReaderInterface" type="\App\Config\XmlReader" />
 </config>
