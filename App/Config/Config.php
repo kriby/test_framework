@@ -3,6 +3,10 @@ namespace App\Config;
 
 class Config
 {
+    const DI_CONFIG = '/App/etc/di.xml';
+
+    const ROUTE_CONFIG = '/App/etc/route.xml';
+
     /**
      * @var ReaderInterface
      */

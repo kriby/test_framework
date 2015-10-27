@@ -5,8 +5,6 @@ use App\Config\Config;
 
 class Container
 {
-    const XML_CONFIG = '/App/etc/di.xml';
-
     /**
      * @var array
      */
@@ -71,7 +69,7 @@ class Container
             foreach ($params as $param) {
                 if($param->getClass()->isInterface()) {
                     $config = $this->config->getConverter()->convert(
-                        $this->config->getReader()->read('preference', ROOT . self::XML_CONFIG)
+                        $this->config->getReader()->read('preference', ROOT . Config::DI_CONFIG)
                     );
                     $className = $this->getPreference($config, $param->getClass()->name);
                 } else {

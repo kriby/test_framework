@@ -1,32 +1,23 @@
 <?php
 namespace App;
 
-use App\Config\RouteConverter;
-use App\Config\XmlReader;
+use App\Config\Config;
 
 class Router
 {
-    const XML_CONFIG = '/App/etc/route.xml';
+    /**
+     * @var Config
+     */
+    private $config;
 
     /**
-     * @var Config\RouteConverter
+     * @param Config $config
+     * @internal param Config\RouteConverter $routeConverter
+     * @internal param Config\XmlReader $reader
      */
-    private $routeConverter;
-
-    /**
-     * @var Config\XmlReader
-     */
-    private $reader;
-
-    /**
-     * @param Config\RouteConverter $routeConverter
-     * @param Config\XmlReader $reader
-     */
-    public function __construct(RouteConverter $routeConverter, XmlReader $reader)
+    public function __construct(Config $config)
     {
-
-        $this->routeConverter = $routeConverter;
-        $this->reader = $reader;
+        $this->config = $config;
     }
 
     /**
@@ -40,8 +31,8 @@ class Router
     {
         $path = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
 
-        $routeConfig = $this->reader->read('route', ROOT . self::XML_CONFIG);
-        $routeConfig = $this->routeConverter->convert($routeConfig);
+        $routeConfig = $this->config->getReader()->read('route', ROOT . Config::ROUTE_CONFIG);
+        $routeConfig = $this->config->getConverter()->convert($routeConfig);
 
 
         if (array_key_exists($path, $routeConfig)) {
