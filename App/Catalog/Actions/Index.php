@@ -6,6 +6,6 @@ class Index
 {
     public function execute()
     {
-
+        echo 'test';
     }
 }

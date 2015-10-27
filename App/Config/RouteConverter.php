@@ -20,6 +20,7 @@ class RouteConverter implements ConverterInterface
     public function convert(\DomNodeList $nodeList)
     {
         $result = [];
+        /** @var \DOMElement $route */
         foreach($nodeList as $route) {
             $result[$route->getAttribute('url')] = $route->getAttribute('class');
         }

@@ -13,6 +13,7 @@ class DiConverter implements ConverterInterface
     public function convert(\DomNodeList $nodeList)
     {
         $result = [];
+        /** @var $preference \DOMElement */
         foreach($nodeList as $preference) {
             $result[$preference->getAttribute('for')] = $preference->getAttribute('type');
         }
