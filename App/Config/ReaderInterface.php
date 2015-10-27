@@ -3,14 +3,14 @@
 namespace App\Config;
 
 
-interface AbstractReaderInterface
+interface ReaderInterface
 {
     /**
      * Method reads data specified by client from source
      *
-     * @param $data
+     * @param $tagName
      * @param $source
      * @return mixed
      */
-    public function read($data, $source);
+    public function read($tagName, $source);
 }

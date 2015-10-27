@@ -3,7 +3,7 @@
 namespace App\Config;
 
 
-class XmlReader implements AbstractReaderInterface
+class XmlReader implements ReaderInterface
 {
     /**
      * @param $config
@@ -19,13 +19,13 @@ class XmlReader implements AbstractReaderInterface
     /**
      * Method reads data from xml configuration file.
      *
-     * @param $data
+     * @param $tagName
      * @param $source
      * @return \DomNodeList
      */
-    public function read($data, $source)
+    public function read($tagName, $source)
     {
         $preferences = $this->loadConfig($source);
-        return $preferences->getElementsByTagName($data);
+        return $preferences->getElementsByTagName($tagName);
     }
 }

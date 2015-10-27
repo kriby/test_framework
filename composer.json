@@ -9,10 +9,6 @@
       "email": "email@example.com"
     }
   ],
-  "require": {
-    "abraham/twitteroauth": "0.6.0",
-    "sybio/image-workshop": "2.0.9"
-  },
   "autoload": {
       "psr-4": {
           "App\\": "App/"
