@@ -1,12 +1,8 @@
 <?php
 namespace App\Config;
 
-class Config
+class Config implements ConfigInterface
 {
-    const DI_CONFIG = '/App/etc/di.xml';
-
-    const ROUTE_CONFIG = '/App/etc/route.xml';
-
     /**
      * @var ReaderInterface
      */
@@ -22,24 +18,20 @@ class Config
      */
     public function __construct(ReaderInterface $reader, ConverterInterface $converter)
     {
-
         $this->reader = $reader;
         $this->converter = $converter;
     }
 
     /**
-     * @return ReaderInterface
+     * Method returns an array with configuration for specified tag in specified source.
+     *
+     * @param $tagName
+     * @param $source
+     * @return array
      */
-    public function getReader()
+    public function getConfig($tagName, $source)
     {
-        return $this->reader;
-    }
-
-    /**
-     * @return ConverterInterface
-     */
-    public function getConverter()
-    {
-        return $this->converter;
+        $config = $this->reader->read($tagName, $source);
+        return $this->converter->convert($config);
     }
 }
