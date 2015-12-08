@@ -2,10 +2,8 @@
 <config>
     <preference for="App\Request\ActionFactoryInterface" type="\App\Request\ActionFactory" />
     <preference for="App\Config\ReaderInterface" type="\App\Config\XmlReader" />
-    <virtualType name="RouteConfig" type="\App\Config\Config">
-        <arguments>
+    <virtualType for="routeConfig" type="\App\Config\Config">
             <argument>\App\Config\XmlReader</argument>
             <argument>\App\Config\RouteConverter</argument>
-        </arguments>
     </virtualType>
 </config>

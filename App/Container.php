@@ -35,7 +35,7 @@ class Container
     public function get($className)
     {
         if(!isset($this->objects[$className])) {
-            $this->objects[$className] = $this->create($className);
+            return $this->objects[$className] = $this->create($className);
         }
         return $this->objects[$className];
     }
@@ -44,18 +44,22 @@ class Container
     /**
      * Method creates an instance of a requested class.
      *
-     * @param $className
+     * @param $type
      * @return object
      */
-    public function create($className)
+    public function create($type)
     {
-        $params = [];
-        $class = new \ReflectionClass($className);
+        $class = new \ReflectionClass($type);
         $constructor = $class->getConstructor();
         if ($constructor) {
             $params = $this->resolveArguments($constructor->getParameters());
+            if($params['realType'] != '') {
+                $realType = new \ReflectionClass($params['realType']);
+                $params = ['args' => [$realType->newInstanceArgs($params['args'])]];
+            }
+            return $class->newInstanceArgs($params['args']);
         }
-        return $class->newInstanceArgs($params);
+        return $class->newInstanceArgs();
     }
 
     /**
@@ -66,16 +70,24 @@ class Container
      */
     private function resolveArguments(array $params)
     {
-        $result = [];
+        $result = ['realType' => '', 'args' => ''];
         if ($params) {
             foreach ($params as $param) {
-                if($param->getClass()->isInterface()) {
+                if($param->getClass() == null) {
+                    $config = $this->config->getConfig('virtualType', ROOT . self::DI_CONFIG);
+                    $realType = $param->name;
+                    $result['realType'] = $config[$realType];
+                    foreach($config['arguments'] as $argument) {
+                        $result['args'][] = $this->create($argument);
+                    }
+                } elseif($param->getClass()->isInterface()) {
                     $config = $this->config->getConfig('preference', ROOT . self::DI_CONFIG);
                     $className = $this->getPreference($config, $param->getClass()->name);
+                    $result['args'][] = $this->get($className);
                 } else {
                     $className = $param->getClass()->name;
+                    $result['args'][] = $this->get($className);
                 }
-                $result[] = $this->get($className);
             }
         }
         return $result;
@@ -88,6 +100,5 @@ class Container
                 return $type;
             }
         }
-
     }
 }

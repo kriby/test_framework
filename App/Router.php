@@ -1,23 +1,23 @@
 <?php
 namespace App;
 
-use App\Config\Config as RouteConfig;
+use App\Config\Config;
 
 class Router
 {
     const ROUTE_CONFIG = '/App/etc/route.xml';
 
     /**
-     * @var RouteConfig
+     * @var Config
      */
-    private $config;
+    private $routeConfig;
 
     /**
-     * @param RouteConfig $config
+     * @param Config $routeConfig
      */
-    public function __construct(RouteConfig $config)
+    public function __construct($routeConfig)
     {
-        $this->config = $config;
+        $this->routeConfig = $routeConfig;
     }
 
     /**
@@ -31,7 +31,8 @@ class Router
     {
         $path = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
 
-        $routeConfig = $this->config->getConfig('route', ROOT . self::ROUTE_CONFIG);
+        $routeConfig = $this->routeConfig->getConfig('route', ROOT . self::ROUTE_CONFIG);
+
 
         if (array_key_exists($path, $routeConfig)) {
             return $routeConfig[$path];
