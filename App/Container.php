@@ -51,8 +51,11 @@ class Container
     {
         $class = new \ReflectionClass($type);
         $constructor = $class->getConstructor();
+        if($constructor) {
+            $constructor = $constructor->getParameters();
+        }
         if ($constructor) {
-            $params = $this->resolveArguments($constructor->getParameters());
+            $params = $this->resolveArguments($constructor);
             if($params['realType'] != '') {
                 $realType = new \ReflectionClass($params['realType']);
                 $params = ['args' => [$realType->newInstanceArgs($params['args'])]];
