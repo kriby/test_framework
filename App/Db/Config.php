@@ -13,20 +13,14 @@ class Config
 {
     public static function getDsn()
     {
-        return [
-            'dsn' => 'mysql:host=localhost; dbname=courses'
-        ];
+        return 'mysql:host=localhost; dbname=courses';
     }
     public static function getUsername()
     {
-        return [
-            'db_user' => 'root',
-        ];
+        return 'root';
     }
     public static function getPassword()
     {
-        return [
-            'db_password' => '123123q'
-        ];
+        return '123123q';
     }
 }
