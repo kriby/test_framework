@@ -1,11 +1,17 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: rliukshyn
+ * Date: 12/21/2015
+ * Time: 10:25
+ */
 
-namespace App\Customer\Actions\Register;
+namespace App\Customer\Actions;
+
 
 use App\Customer\Models\Customer;
-use App\Lib\Action\ActionInterface;
 
-class Form implements ActionInterface
+class Login
 {
     /**
      * @var Customer
@@ -22,7 +28,6 @@ class Form implements ActionInterface
         if($_POST) {
             $this->email = isset($_POST['email']) ? $_POST['email'] : null;
             $this->password = isset($_POST['password']) ? $_POST['password'] : null;
-            $this->passwordConfirm = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : null;
         }
         $this->customerModel = $customer;
     }
@@ -32,6 +37,6 @@ class Form implements ActionInterface
      */
     public function execute()
     {
-        $this->customerModel->saveCustomer($this->email, $this->password, $this->passwordConfirm);
+        $this->customerModel->getCustomer($this->email, $this->password);
     }
 }

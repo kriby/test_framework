@@ -2,6 +2,7 @@
 <routes>
     <route url="/" class="App\Home\Actions\Home" />
     <route url="/register" class="App\Customer\Actions\Register" />
+    <route url="/login" class="App\Customer\Actions\Login" />
     <route url="/registrationform" class="App\Customer\Actions\Register\Form" />
     <route url="/validate" class="App\Customer\Actions\Register\Validator" />
 </routes>

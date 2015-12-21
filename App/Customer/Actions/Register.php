@@ -23,7 +23,7 @@ class Register implements ActionInterface
 
     public function execute()
     {
-        $this->template->getBody('register', __DIR__);
+        $this->template->setBody('register', __DIR__);
         $this->template->render();
     }
 }

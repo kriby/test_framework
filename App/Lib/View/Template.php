@@ -18,7 +18,7 @@ class Template implements TemplateInterface
         return $this->template ;
     }
 
-    public function getBody($value, $dir)
+    public function setBody($value, $dir)
     {
         ob_start();
         include $dir . DS . '..' . DS . 'Views'. DS . $value . '.phtml';

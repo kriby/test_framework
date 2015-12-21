@@ -16,7 +16,7 @@ class Home implements ActionInterface
 
     public function execute()
     {
-        $this->template->getBody('home', __DIR__);
+        $this->template->setBody('home', __DIR__);
         $this->template->render();
     }
 }
