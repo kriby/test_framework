@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <preference for="App\Request\ActionFactoryInterface" type="\App\Request\ActionFactory" />
+    <preference for="App\Lib\Request\ActionFactoryInterface" type="\App\Lib\Request\ActionFactory" />
     <preference for="App\Config\ReaderInterface" type="\App\Config\XmlReader" />
     <virtualType for="routeConfig" type="\App\Config\Config">
             <argument>\App\Config\XmlReader</argument>

@@ -25,6 +25,13 @@ class Template implements TemplateInterface
         $this->body = ob_get_clean();
     }
 
+    public function setHeaderLogin($value, $dir)
+    {
+        ob_start();
+        include $dir . DS . '..' . DS . 'Views'. DS . $value . '.phtml';
+        $this->headerLogin = ob_get_clean();
+    }
+
     public function render()
     {
         include  __DIR__ . DS. $this->getTemplate();

@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+use App\Lib\Action\ActionInterface;
+
 class App
 {
     /**
@@ -9,7 +11,7 @@ class App
     private $router;
 
     /**
-     * @var \App\Request\ActionFactory
+     * @var \App\Lib\Request\ActionFactory
      */
     private $actionFactory;
 
@@ -17,10 +19,11 @@ class App
      * App constructor.
      *
      * @param \App\Router $router
-     * @param \App\Request\ActionFactoryInterface $actionFactory
+     * @param ActionInterface $actionFactory
      */
-    public function __construct(Router $router, Request\ActionFactoryInterface $actionFactory)
+    public function __construct(Router $router, ActionInterface $actionFactory)
     {
+        session_start();
         $this->router = $router;
         $this->actionFactory = $actionFactory;
     }

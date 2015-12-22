@@ -2,6 +2,7 @@
 namespace App\Customer\Models;
 
 use App\Db\Connection;
+use App\Lib\Session\Session;
 
 class Customer
 {
@@ -23,23 +24,28 @@ class Customer
     }
 
     /**
+     * @param $username
      * @param $email
      * @param $password
      * @param $passwordConfirm
      * @return \PDOStatement|string
      */
-    public function saveCustomer($email, $password, $passwordConfirm)
+    public function saveCustomer($username, $email, $password, $passwordConfirm)
     {
         if ($this->validate($password, $passwordConfirm)) {
+            $username = $this->connection->quote($username);
             $email = $this->connection->quote($email);
             $password = $this->connection->quote($this->getPassword($password));
             $res = $this->connection->query("SELECT * FROM users WHERE email = {$email}");
             if ($res) {
                 return 'Such user already exists!';
             } else {
-                return $this->connection->query(
-                    "INSERT INTO users (email, user_password) VALUES ({$email},{$password})"
+                $result = $this->connection->query(
+                    "INSERT INTO users (user_name, email, user_password) VALUES ({$username}, {$email},{$password})"
                 );
+                if ($result) {
+                    Session::set('user', $username);
+                }
             }
         }
     }

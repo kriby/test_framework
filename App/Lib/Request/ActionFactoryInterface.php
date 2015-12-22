@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Request;
+namespace App\Lib\Request;
 
 
 interface ActionFactoryInterface
