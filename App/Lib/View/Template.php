@@ -5,6 +5,7 @@ class Template implements TemplateInterface
 {
     const DEFAULT_TEMPLATE = '..\default.phtml';
 
+    protected $headerLogin = '';
     protected $template = self::DEFAULT_TEMPLATE;
     protected $body;
 

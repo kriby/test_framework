@@ -101,6 +101,8 @@ class Container
         foreach($config as $for => $type) {
             if($for == $interface) {
                 return $type;
+            } else {
+                throw new \Exception('No preference found!');
             }
         }
     }

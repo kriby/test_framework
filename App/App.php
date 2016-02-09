@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Lib\Action\ActionInterface;
+use App\Lib\Request\ActionFactoryInterface;
 
 class App
 {
@@ -19,9 +20,9 @@ class App
      * App constructor.
      *
      * @param \App\Router $router
-     * @param ActionInterface $actionFactory
+     * @param ActionFactoryInterface $actionFactory
      */
-    public function __construct(Router $router, ActionInterface $actionFactory)
+    public function __construct(Router $router, ActionFactoryInterface $actionFactory)
     {
         session_start();
         $this->router = $router;
