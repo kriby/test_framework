@@ -1,8 +1,8 @@
 <?php
 namespace App;
 
-use App\Lib\Action\ActionInterface;
 use App\Lib\Request\ActionFactoryInterface;
+use App\Lib\Session\Session;
 
 class App
 {
@@ -24,7 +24,7 @@ class App
      */
     public function __construct(Router $router, ActionFactoryInterface $actionFactory)
     {
-        session_start();
+        Session::start();
         $this->router = $router;
         $this->actionFactory = $actionFactory;
     }

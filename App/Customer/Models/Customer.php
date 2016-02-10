@@ -36,13 +36,17 @@ class Customer
             $username = $this->connection->quote($username);
             $email = $this->connection->quote($email);
             $password = $this->connection->quote($this->getPassword($password));
-            $res = $this->connection->query("SELECT * FROM users WHERE email = {$email}");
-            if ($res) {
+            $params = ['email' => $email];
+            $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email');
+            $result = $request->execute($params);
+            if ($result) {
                 return 'Such user already exists!';
             } else {
-                $result = $this->connection->query(
-                    "INSERT INTO users (user_name, email, user_password) VALUES ({$username}, {$email},{$password})"
+                $params = ['email' => $email, 'username' => $username, 'password' => $password];
+                $request = $this->connection->prepare(
+                    'INSERT INTO users (user_name, email, user_password) VALUES (:username, :email, :password)'
                 );
+                $result = $request->execute($params);
                 if ($result) {
                     Session::set('user', $username);
                 }
@@ -80,8 +84,9 @@ class Customer
     {
         $email = $this->connection->quote($email);
         $password = $this->connection->quote($this->getPassword($password));
-        $res = $this->connection->query("SELECT * FROM users WHERE email = {$email} AND user_password = {$password}");
-        if ($res) {
+        $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email AND user_password = :password');
+        $params = ['email' => $email, 'password' => $password];
+        if ($request->execute($params)) {
             return 'You successfully logged in!';
         } else {
             return 'Check your credentials, please.';

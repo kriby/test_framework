@@ -58,6 +58,14 @@ class Session
     }
 
     /**
+     * Starts session.
+     */
+    public static function start()
+    {
+        session_start();
+    }
+
+    /**
      * Destroys session.
      */
     public static function destroy()
