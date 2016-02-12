@@ -5,10 +5,9 @@
  * Date: 12/21/2015
  * Time: 10:25
  */
-
 namespace App\Customer\Actions;
 
-
+use \App\Lib\Request\RequestObject;
 use App\Customer\Models\Customer;
 
 class Login
@@ -22,21 +21,12 @@ class Login
      * Form constructor.
      *
      * @param Customer $customer
+     * @param RequestObject $requestObject
      */
-    public function __construct(Customer $customer)
+    public function __construct(Customer $customer, RequestObject $requestObject)
     {
-        if($_POST) {
-            $this->email = isset($_POST['email']) ? $_POST['email'] : null;
-            $this->password = isset($_POST['password']) ? $_POST['password'] : null;
-        }
+        $this->email = $requestObject->getPost('email');
+        $this->password = $requestObject->getPost('password');
         $this->customerModel = $customer;
-    }
-
-    /**
-     *  Validates user input in Register from and saves customer into database.
-     */
-    public function execute()
-    {
-        $this->customerModel->getCustomer($this->email, $this->password);
     }
 }
