@@ -7,26 +7,32 @@
  */
 namespace App\Customer\Actions;
 
-use \App\Lib\Request\RequestObject;
 use App\Customer\Models\Customer;
+use App\Lib\Action\ActionInterface;
 
-class Login
+class Login implements ActionInterface
 {
     /**
      * @var Customer
      */
-    private $customerModel;
+    private $customer;
 
     /**
      * Form constructor.
      *
      * @param Customer $customer
-     * @param RequestObject $requestObject
      */
-    public function __construct(Customer $customer, RequestObject $requestObject)
+    public function __construct(Customer $customer)
     {
-        $this->email = $requestObject->getPost('email');
-        $this->password = $requestObject->getPost('password');
-        $this->customerModel = $customer;
+        $this->customer = $customer;
+    }
+
+    public function execute()
+    {
+        try {
+            $this->customer->getCustomer();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

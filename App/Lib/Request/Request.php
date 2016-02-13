@@ -9,7 +9,7 @@
 namespace App\Lib\Request;
 
 
-class RequestObject implements RequestObjectInterface
+class Request implements RequestInterface
 {
     /**
      * Returns $_POST array data.

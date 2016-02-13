@@ -2,37 +2,60 @@
 namespace App\Customer\Models;
 
 use App\Db\Connection;
-use App\Lib\Request\RequestObject;
+use App\Lib\Request\Request;
 use App\Lib\Session\Session;
 
 class Customer
 {
-    public $username;
-    public $email;
-    public $password;
-    public $passwordConfirm;
+    private $username;
+    private $email;
+    private $password;
+    private $passwordConfirm;
 
     /**
-     * Save constructor.
-     * @param RequestObject $requestObject
+     * @return array|string
      */
-    public function __construct(RequestObject $requestObject)
+    public function getUsername()
     {
-        $this->connection = Connection ::getInstance()->getConnection();
-        $this->username = $requestObject->getPost('user_name');
-        $this->email = $requestObject->getPost('email');
-        $this->password = $requestObject->getPost('password');
-        $this->passwordConfirm = $requestObject->getPost('confirm_password');
-
+        return $this->username;
     }
 
     /**
-     * @param $password
-     * @return null
+     * @return array|string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return array|string
      */
     public function getPassword()
     {
-        return $this->hashPassword();
+        return $this->password;
+    }
+
+    /**
+     * @return array|string
+     */
+    public function getPasswordConfirm()
+    {
+        return $this->passwordConfirm;
+    }
+
+    /**
+     * Save constructor.
+     * @param Request $request
+     */
+    public function __construct(Request $request)
+    {
+        $this->connection = Connection ::getInstance()->getConnection();
+        $this->username = $request->getPost('user_name');
+        $this->email = $request->getPost('email');
+        $this->password = $request->getPost('password');
+        $this->passwordConfirm = $request->getPost('confirm_password');
+
     }
 
     /**
@@ -43,7 +66,7 @@ class Customer
 
         $username = $this->connection->quote($this->username);
         $email = $this->connection->quote($this->email);
-        $password = $this->connection->quote($this->getPassword());
+        $password = $this->connection->quote($this->hashPassword());
         $params = ['email' => $email];
         $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email');
         $result = $request->execute($params);
@@ -73,8 +96,9 @@ class Customer
         return password_hash($this->password, PASSWORD_BCRYPT);
     }
 
+
     /**
-     * @return string
+     * @throws \Exception
      */
     public function getCustomer()
     {
@@ -82,10 +106,8 @@ class Customer
         $password = $this->connection->quote($this->getPassword());
         $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email AND user_password = :password');
         $params = ['email' => $email, 'password' => $password];
-        if ($request->execute($params)) {
-            return 'You successfully logged in!';
-        } else {
-            return 'Check your credentials, please.';
+        if (!$request->execute($params)) {
+            throw new \Exception('Invalid username/password. Check your credentials.');
         }
     }
 }
