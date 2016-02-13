@@ -1,8 +1,8 @@
 <?php
 namespace App\Customer\Models;
 
-use App\Db\Connection;
-use App\Lib\Request\Request;
+use App\Db\QueryBuilderInterface;
+use App\Lib\Request\RequestInterface;
 use App\Lib\Session\Session;
 
 class Customer
@@ -11,6 +11,10 @@ class Customer
     private $email;
     private $password;
     private $passwordConfirm;
+    /**
+     * @var QueryBuilderInterface
+     */
+    private $queryBuilder;
 
     /**
      * @return array|string
@@ -46,16 +50,17 @@ class Customer
 
     /**
      * Save constructor.
-     * @param Request $request
+     * @param RequestInterface $request
+     * @param QueryBuilderInterface $queryBuilder
      */
-    public function __construct(Request $request)
+    public function __construct(RequestInterface $request, QueryBuilderInterface $queryBuilder)
     {
-        $this->connection = Connection ::getInstance()->getConnection();
         $this->username = $request->getPost('user_name');
         $this->email = $request->getPost('email');
         $this->password = $request->getPost('password');
         $this->passwordConfirm = $request->getPost('confirm_password');
 
+        $this->queryBuilder = $queryBuilder;
     }
 
     /**
@@ -63,27 +68,30 @@ class Customer
      */
     public function save()
     {
+//        $params = ['email' => $email];
+//        $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email');
+//        $result = $request->execute($params);
 
-        $username = $this->connection->quote($this->username);
-        $email = $this->connection->quote($this->email);
-        $password = $this->connection->quote($this->hashPassword());
-        $params = ['email' => $email];
-        $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email');
-        $result = $request->execute($params);
-        if ($result) {
+        $request = $this->queryBuilder->select()->from('users')->where('email', '=', $this->email);
+
+        if ($request->execute()) {
             return 'Such user already exists!';
         } else {
-            $params = ['email' => $email, 'username' => $username, 'password' => $password];
-            $request = $this->connection->prepare(
-                'INSERT INTO users (user_name, email, user_password) VALUES (:username, :email, :password)'
-            );
+            $params = [
+                'email' => $this->email,
+                'username' => $this->username,
+                'password' => $this->hashPassword()
+            ];
+//            $request = $this->connection->prepare(
+//                'INSERT INTO users (user_name, email, user_password) VALUES (:username, :email, :password)'
+//            );
+
+            $request = $this->queryBuilder->insert('users')->values($params);
             try {
-                $result = $request->execute($params);
+                $request->execute();
+                Session::set('user', $this->username);
             } catch (\PDOException $e) {
                 echo $e->getMessage();
-            }
-            if ($result) {
-                Session::set('user', $username);
             }
         }
     }

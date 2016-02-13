@@ -6,4 +6,6 @@
             <argument>\App\Config\XmlReader</argument>
             <argument>\App\Config\RouteConverter</argument>
     </virtualType>
+    <preference for="App\Db\QueryBuilderInterface" type="\App\DB\QueryBuilder" />
+    <preference for="App\Lib\Request\RequestInterface" type="\App\Lib\Request\Request" />
 </config>
