@@ -11,7 +11,6 @@ class QueryBuilder implements QueryBuilderInterface
 {
     private $query;
     private $connection;
-    private $params;
     /** @var  \PDOStatement */
     private $preparedStatement;
 
@@ -41,28 +40,24 @@ class QueryBuilder implements QueryBuilderInterface
     }
 
     /**
-     * @param $param
+     * @param $attribute
      * @param $sign
-     * @param $value
      * @return QueryBuilder
      */
-    public function where($param, $sign, $value)
+    public function where($attribute, $sign)
     {
-        $this->params = [$param => $value];
-        $this->query .= "WHERE $param $sign :$param";
+        $this->query .= "WHERE $attribute $sign :$attribute";
         return $this;
     }
 
     /**
-     * @param $param
+     * @param $attribute
      * @param $sign
-     * @param $value
      * @return QueryBuilder
      */
-    public function andWhere($param, $sign, $value)
+    public function andWhere($attribute, $sign)
     {
-        $this->params = [$param => $value];
-        $this->query .= " AND WHERE $param $sign :$param";
+        $this->query .= " AND $attribute $sign :$attribute";
         return $this;
     }
 
@@ -75,12 +70,21 @@ class QueryBuilder implements QueryBuilderInterface
     }
 
     /**
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->preparedStatement->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param array $params
      * @return QueryBuilder
      */
-    public function execute()
+    public function execute(array $params)
     {
         $this->preparedStatement = $this->connection->prepare($this->query);
-        $this->preparedStatement->execute($this->params);
+        $this->preparedStatement->execute($params);
         return $this;
     }
 
@@ -100,7 +104,6 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function values(array $values)
     {
-        $this->params = $values;
         $placeholders = [];
         $attributes = array_keys($values);
         foreach($attributes as $value) {

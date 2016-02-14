@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Customer\Actions\Register;
+namespace App\Customer\Actions\Login;
 
 use App\Lib\Action\ActionInterface;
 use App\Lib\View\Template;
@@ -16,7 +15,7 @@ class Form implements ActionInterface
 
     public function execute()
     {
-        $this->template->setBody('register', __DIR__);
+        $this->template->setBody('login', __DIR__);
         $this->template->render();
     }
 }

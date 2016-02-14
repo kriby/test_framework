@@ -22,7 +22,7 @@ class Template implements TemplateInterface
     public function setBody($value, $dir)
     {
         ob_start();
-        include $dir . DS . '..' . DS . 'Views'. DS . $value . '.phtml';
+        include $dir . DS . '..' . DS . '..' . DS . 'Views'. DS . $value . '.phtml';
         $this->body = ob_get_clean();
     }
 

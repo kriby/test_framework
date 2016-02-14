@@ -24,12 +24,11 @@ interface QueryBuilderInterface
     public function from($table);
 
     /**
-     * @param $param
+     * @param $attribute
      * @param $sign
-     * @param $value
      * @return QueryBuilderInterface
      */
-    public function where($param, $sign, $value);
+    public function where($attribute, $sign);
 
     /**
      * @return array
@@ -37,9 +36,15 @@ interface QueryBuilderInterface
     public function getAll();
 
     /**
+     * @return array
+     */
+    public function getRow();
+
+    /**
+     * @param array $params
      * @return QueryBuilderInterface
      */
-    public function execute();
+    public function execute(array $params);
 
     /**
      * @param $table
@@ -54,10 +59,9 @@ interface QueryBuilderInterface
     public function values(array $values);
 
     /**
-     * @param $param
+     * @param $attribute
      * @param $sign
-     * @param $value
      * @return QueryBuilderInterface
      */
-    public function andWhere($param, $sign, $value);
+    public function andWhere($attribute, $sign);
 }

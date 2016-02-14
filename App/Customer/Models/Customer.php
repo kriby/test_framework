@@ -7,60 +7,57 @@ use App\Lib\Session\Session;
 
 class Customer
 {
-    private $username;
-    private $email;
-    private $password;
-    private $passwordConfirm;
     /**
      * @var QueryBuilderInterface
      */
     private $queryBuilder;
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     /**
-     * @return array|string
+     * @return string
      */
     public function getUsername()
     {
-        return $this->username;
+        return $this->request->getPost('username');
     }
 
     /**
-     * @return array|string
+     * @return string
      */
     public function getEmail()
     {
-        return $this->email;
+        return $this->request->getPost('email');
     }
 
     /**
-     * @return array|string
+     * @return string
      */
     public function getPassword()
     {
-        return $this->password;
+        return $this->request->getPost('password');
     }
 
     /**
-     * @return array|string
+     * @return string
      */
     public function getPasswordConfirm()
     {
-        return $this->passwordConfirm;
+        return $this->request->getPost('confirm_password');
     }
 
     /**
      * Save constructor.
+     *
      * @param RequestInterface $request
      * @param QueryBuilderInterface $queryBuilder
      */
     public function __construct(RequestInterface $request, QueryBuilderInterface $queryBuilder)
     {
-        $this->username = $request->getPost('username');
-        $this->email = $request->getPost('email');
-        $this->password = $request->getPost('password');
-        $this->passwordConfirm = $request->getPost('confirm_password');
-
         $this->queryBuilder = $queryBuilder;
+        $this->request = $request;
     }
 
     /**
@@ -69,20 +66,23 @@ class Customer
      */
     public function save()
     {
-        $request = $this->queryBuilder->select()->from('users')->where('email', '=', $this->email)->execute();
+        $request = $this->queryBuilder
+            ->select()
+            ->from('users')
+            ->where('email', '=')
+            ->execute(['email' => $this->getEmail()]);
 
         if ($request->getAll()) {
-            return 'Such user already exists!';
+            throw new \Exception('Such user already exists!');
         } else {
             $params = [
-                'email' => $this->email,
-                'user_name' => $this->username,
+                'email' => $this->getEmail(),
+                'user_name' => $this->getUsername(),
                 'user_password' => $this->hashPassword()
             ];
-
             $request = $this->queryBuilder->insert('users')->values($params);
-            if($request->execute()) {
-                Session::set('user', $this->username);
+            if($request->execute($params)) {
+                Session::set('user', $this->getUsername());
             } else {
                 throw new \Exception('Customer cannot be saved');
             }
@@ -94,22 +94,27 @@ class Customer
      */
     private function hashPassword()
     {
-        return password_hash($this->password, PASSWORD_BCRYPT);
+        return password_hash($this->getPassword(), PASSWORD_BCRYPT);
     }
 
 
     /**
      * @throws \Exception
      */
-    public function getCustomer()
+    public function find()
     {
+        $params = [
+            'email' => $this->getEmail(),
+        ];
         $request = $this->queryBuilder
             ->select()
             ->from('users')
-            ->where('email', '=', $this->email)
-            ->andWhere('password', '=', $this->getPassword())
-            ->execute();
-        if (!$request->getAll()) {
+            ->where('email', '=')
+            ->execute($params)
+            ->getRow();
+        if (password_verify($this->getPassword(),$request['user_password'])) {
+            return true;
+        } else {
             throw new \Exception('Invalid username/password. Check your credentials.');
         }
     }
