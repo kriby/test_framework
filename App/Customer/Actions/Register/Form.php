@@ -36,7 +36,7 @@ class Form implements ActionInterface
     {
         if ($this->validate()) {
             $this->customer->save();
-            $this->response->redirect('/home');
+            $this->response->redirect('/');
         } else {
             throw new \Exception('Password and Confirm Password fields should be the same.');
         }

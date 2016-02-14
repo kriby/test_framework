@@ -31,10 +31,13 @@ interface QueryBuilderInterface
      */
     public function where($param, $sign, $value);
 
+    /**
+     * @return array
+     */
     public function getAll();
 
     /**
-     * @return boolean
+     * @return QueryBuilderInterface
      */
     public function execute();
 
@@ -50,4 +53,11 @@ interface QueryBuilderInterface
      */
     public function values(array $values);
 
+    /**
+     * @param $param
+     * @param $sign
+     * @param $value
+     * @return QueryBuilderInterface
+     */
+    public function andWhere($param, $sign, $value);
 }

@@ -55,7 +55,7 @@ class Customer
      */
     public function __construct(RequestInterface $request, QueryBuilderInterface $queryBuilder)
     {
-        $this->username = $request->getPost('user_name');
+        $this->username = $request->getPost('username');
         $this->email = $request->getPost('email');
         $this->password = $request->getPost('password');
         $this->passwordConfirm = $request->getPost('confirm_password');
@@ -65,33 +65,26 @@ class Customer
 
     /**
      * @return \PDOStatement|string
+     * @throws \Exception
      */
     public function save()
     {
-//        $params = ['email' => $email];
-//        $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email');
-//        $result = $request->execute($params);
+        $request = $this->queryBuilder->select()->from('users')->where('email', '=', $this->email)->execute();
 
-        $request = $this->queryBuilder->select()->from('users')->where('email', '=', $this->email);
-
-        if ($request->execute()) {
+        if ($request->getAll()) {
             return 'Such user already exists!';
         } else {
             $params = [
                 'email' => $this->email,
-                'username' => $this->username,
-                'password' => $this->hashPassword()
+                'user_name' => $this->username,
+                'user_password' => $this->hashPassword()
             ];
-//            $request = $this->connection->prepare(
-//                'INSERT INTO users (user_name, email, user_password) VALUES (:username, :email, :password)'
-//            );
 
             $request = $this->queryBuilder->insert('users')->values($params);
-            try {
-                $request->execute();
+            if($request->execute()) {
                 Session::set('user', $this->username);
-            } catch (\PDOException $e) {
-                echo $e->getMessage();
+            } else {
+                throw new \Exception('Customer cannot be saved');
             }
         }
     }
@@ -110,11 +103,13 @@ class Customer
      */
     public function getCustomer()
     {
-        $email = $this->connection->quote($this->email);
-        $password = $this->connection->quote($this->getPassword());
-        $request = $this->connection->prepare('SELECT * FROM users WHERE email = :email AND user_password = :password');
-        $params = ['email' => $email, 'password' => $password];
-        if (!$request->execute($params)) {
+        $request = $this->queryBuilder
+            ->select()
+            ->from('users')
+            ->where('email', '=', $this->email)
+            ->andWhere('password', '=', $this->getPassword())
+            ->execute();
+        if (!$request->getAll()) {
             throw new \Exception('Invalid username/password. Check your credentials.');
         }
     }
