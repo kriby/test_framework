@@ -9,6 +9,37 @@ namespace App\Db;
 
 class QueryBuilder implements QueryBuilderInterface
 {
+    /**
+     * Data types.
+     */
+    const TYPE_BOOLEAN = 'boolean';
+
+    const TYPE_SMALLINT = 'smallint';
+
+    const TYPE_INTEGER = 'integer';
+
+    const TYPE_BIGINT = 'bigint';
+
+    const TYPE_FLOAT = 'float';
+
+    const TYPE_NUMERIC = 'numeric';
+
+    const TYPE_DECIMAL = 'decimal';
+
+    const TYPE_DATE = 'date';
+
+    const TYPE_TIMESTAMP = 'timestamp';
+
+    const TYPE_DATETIME = 'datetime';
+
+    const TYPE_CHAR = 'char';
+
+    const TYPE_VARCHAR = 'varchar';
+
+    const TYPE_TEXT = 'text';
+
+    const TYPE_BLOB = 'blob';
+
     private $query;
     private $connection;
     /** @var  \PDOStatement */
@@ -115,5 +146,35 @@ class QueryBuilder implements QueryBuilderInterface
         $this->query .="($attributes) VALUES ($placeholders)";
 
         return $this;
+    }
+
+    /**
+     * @param $name
+     * @param $type
+     * @param $size
+     * @param array $options
+     * @return QueryBuilder
+     */
+    public function addColumn($name, $type, $size, $options = [])
+    {
+        // TODO: Implement addColumn() method.
+    }
+
+    /**
+     * @param string $dbname
+     * @return QueryBuilder
+     */
+    public function createDatabase($dbname)
+    {
+        // TODO: Implement createDatabase() method.
+    }
+
+    /**
+     * @param string $table
+     * @return QueryBuilder
+     */
+    public function createTable($table)
+    {
+        // TODO: Implement createTable() method.
     }
 }

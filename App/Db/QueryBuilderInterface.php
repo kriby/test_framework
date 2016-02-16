@@ -64,4 +64,25 @@ interface QueryBuilderInterface
      * @return QueryBuilderInterface
      */
     public function andWhere($attribute, $sign);
+
+    /**
+     * @param $name
+     * @param $type
+     * @param $size
+     * @param array $options
+     * @return QueryBuilderInterface
+     */
+    public function addColumn($name, $type, $size, $options = []);
+
+    /**
+     * @param string $dbname
+     * @return QueryBuilderInterface
+     */
+    public function createDatabase($dbname);
+
+    /**
+     * @param string $table
+     * @return QueryBuilderInterface
+     */
+    public function createTable($table);
 }

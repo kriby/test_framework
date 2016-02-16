@@ -4,6 +4,8 @@ namespace App\Customer\Models;
 use App\Db\QueryBuilderInterface;
 use App\Lib\Request\RequestInterface;
 use App\Lib\Session\Session;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class Customer
 {
@@ -66,6 +68,15 @@ class Customer
      */
     public function save()
     {
+        // create a log channel
+        $log = new Logger('name');
+        $log->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
+
+// add records to the log
+        $log->warning('Foo');
+        $log->error('Bar');
+
+
         $request = $this->queryBuilder
             ->select()
             ->from('users')
@@ -113,7 +124,7 @@ class Customer
             ->execute($params)
             ->getRow();
         if (password_verify($this->getPassword(),$request['user_password'])) {
-            return true;
+            return $request;
         } else {
             throw new \Exception('Invalid username/password. Check your credentials.');
         }
