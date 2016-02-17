@@ -9,20 +9,20 @@
 namespace App\Lib\Request;
 
 
-class Request implements RequestInterface
+class Request
 {
     /**
      * Returns $_POST array data.
      *
      * @param null|string $key
-     * @return string|array
+     * @return string|array|null
      */
     public function getPost($key = null)
     {
         if(!$key) {
             return $_POST;
         } else {
-            return $_POST[$key];
+            return isset($_POST[$key]) ? $_POST[$key] : null;
         }
     }
 
@@ -30,14 +30,14 @@ class Request implements RequestInterface
      * Returns $_GET array data.
      *
      * @param null|string $key
-     * @return string|array
+     * @return string|array|null
      */
     public function getQuery($key = null)
     {
         if(!$key) {
             return $_GET;
         } else {
-            return $_GET[$key];
+            return isset($_GET[$key]) ? $_GET[$key] : null;
         }
     }
 

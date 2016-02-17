@@ -7,86 +7,62 @@
  */
 namespace App\Db;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 class QueryBuilder implements QueryBuilderInterface
 {
-    /**
-     * Data types.
-     */
-    const TYPE_BOOLEAN = 'boolean';
-
-    const TYPE_SMALLINT = 'smallint';
-
-    const TYPE_INTEGER = 'integer';
-
-    const TYPE_BIGINT = 'bigint';
-
-    const TYPE_FLOAT = 'float';
-
-    const TYPE_NUMERIC = 'numeric';
-
-    const TYPE_DECIMAL = 'decimal';
-
-    const TYPE_DATE = 'date';
-
-    const TYPE_TIMESTAMP = 'timestamp';
-
-    const TYPE_DATETIME = 'datetime';
-
-    const TYPE_CHAR = 'char';
-
-    const TYPE_VARCHAR = 'varchar';
-
-    const TYPE_TEXT = 'text';
-
-    const TYPE_BLOB = 'blob';
-
     private $query;
     private $connection;
     /** @var  \PDOStatement */
     private $preparedStatement;
+    private $log;
 
     public function __construct()
     {
         $this->connection = Connection::getInstance()->getConnection();
+        // create a log channel
+        $this->log = new Logger('name');
+        $this->log->pushHandler(new StreamHandler(ROOT . DS . 'error.log', Logger::WARNING));
     }
 
     /**
      * @param string $fields
      * @return QueryBuilder
      */
-    public function select($fields = '*')
+    public function select(string $fields = '*')
     {
         $this->query = "SELECT $fields ";
         return $this;
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return QueryBuilder
      */
-    public function from($table)
+    public function from(string $table)
     {
         $this->query .= "FROM $table ";
         return $this;
     }
 
     /**
-     * @param $attribute
-     * @param $sign
+     * @param string $attribute
+     * @param string $sign
      * @return QueryBuilder
      */
-    public function where($attribute, $sign)
+    public function where(string $attribute, string $sign)
     {
         $this->query .= "WHERE $attribute $sign :$attribute";
         return $this;
     }
 
     /**
-     * @param $attribute
-     * @param $sign
+     * @param string $attribute
+     * @param string $sign
      * @return QueryBuilder
      */
-    public function andWhere($attribute, $sign)
+    public function andWhere(string $attribute, string $sign)
     {
         $this->query .= " AND $attribute $sign :$attribute";
         return $this;
@@ -120,10 +96,10 @@ class QueryBuilder implements QueryBuilderInterface
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return QueryBuilder
      */
-    public function insert($table)
+    public function insert(string $table)
     {
         $this->query = "INSERT INTO $table ";
         return $this;
@@ -149,32 +125,57 @@ class QueryBuilder implements QueryBuilderInterface
     }
 
     /**
-     * @param $name
-     * @param $type
-     * @param $size
-     * @param array $options
-     * @return QueryBuilder
-     */
-    public function addColumn($name, $type, $size, $options = [])
-    {
-        // TODO: Implement addColumn() method.
-    }
-
-    /**
      * @param string $dbname
      * @return QueryBuilder
      */
-    public function createDatabase($dbname)
+    public function createDatabase(string $dbname)
     {
-        // TODO: Implement createDatabase() method.
+        $this->query = "CREATE DATABASE $dbname; use $dbname";
+        $this->preparedStatement = $this->connection->prepare($this->query);
+        $this->preparedStatement->execute();
+        return $this;
     }
 
     /**
-     * @param string $table
-     * @return QueryBuilder
+     * @param string|array $attribute
+     * @return QueryBuilderInterface
      */
-    public function createTable($table)
+    public function addIndex($attribute)
     {
-        // TODO: Implement createTable() method.
+        // TODO: Implement addIndex() method.
+    }
+
+    /**
+     * @param string $name
+     * @param array $columns
+     * @param array $options
+     * @return QueryBuilderInterface
+     */
+    public function createTable(string $name, array $columns, array $options = [])
+    {
+        $this->query = sprintf('CREATE TABLE `%s`(', $name);
+        foreach($columns as $key => &$value) {
+            $value = sprintf('`%s` ', $key) . $value;
+        }
+        unset($value);
+        $columns = implode(',', $columns);
+
+        $this->query .= "$columns)";
+        foreach($options as $key => &$value) {
+            $value = "$key=$value";
+        }
+        unset($value);
+        $options = implode(' ', $options);
+
+        $this->query .= " $options";
+        try {
+            $this->preparedStatement = $this->connection->prepare($this->query);
+            if ($this->preparedStatement->execute() === false) {
+                throw new \PDOException("Database cannot be created.");
+            }
+        } catch (\Exception $e) {
+            $this->log->error('Bar');
+            echo $e->getMessage();
+        }
     }
 }

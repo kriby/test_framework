@@ -6,4 +6,5 @@
     <route url="/submit_login" class="App\Customer\Actions\Login" />
     <route url="/submit_registration" class="App\Customer\Actions\Register" />
     <route url="/validate" class="App\Customer\Actions\Register\Validator" />
+    <route url="/install" class="App\Setup\Setup" />
 </routes>

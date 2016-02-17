@@ -2,7 +2,7 @@
 namespace App\Customer\Models;
 
 use App\Db\QueryBuilderInterface;
-use App\Lib\Request\RequestInterface;
+use App\Lib\Request\Request;
 use App\Lib\Session\Session;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;

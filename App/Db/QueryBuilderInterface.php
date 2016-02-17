@@ -15,20 +15,20 @@ interface QueryBuilderInterface
      * @param string $fields
      * @return QueryBuilderInterface
      */
-    public function select($fields = '*');
+    public function select(string $fields = '*');
 
     /**
-     * @param $table
+     * @param string $table
      * @return QueryBuilderInterface
      */
-    public function from($table);
+    public function from(string $table);
 
     /**
-     * @param $attribute
-     * @param $sign
+     * @param string $attribute
+     * @param string $sign
      * @return QueryBuilderInterface
      */
-    public function where($attribute, $sign);
+    public function where(string $attribute, string $sign);
 
     /**
      * @return array
@@ -47,10 +47,10 @@ interface QueryBuilderInterface
     public function execute(array $params);
 
     /**
-     * @param $table
+     * @param string $table
      * @return QueryBuilderInterface
      */
-    public function insert($table);
+    public function insert(string $table);
 
     /**
      * @param array $values
@@ -59,30 +59,29 @@ interface QueryBuilderInterface
     public function values(array $values);
 
     /**
-     * @param $attribute
-     * @param $sign
+     * @param string $attribute
+     * @param string $sign
      * @return QueryBuilderInterface
      */
-    public function andWhere($attribute, $sign);
-
-    /**
-     * @param $name
-     * @param $type
-     * @param $size
-     * @param array $options
-     * @return QueryBuilderInterface
-     */
-    public function addColumn($name, $type, $size, $options = []);
+    public function andWhere(string $attribute, string $sign);
 
     /**
      * @param string $dbname
      * @return QueryBuilderInterface
      */
-    public function createDatabase($dbname);
+    public function createDatabase(string $dbname);
 
     /**
-     * @param string $table
+     * @param $name
+     * @param array $columns
+     * @param array $options
      * @return QueryBuilderInterface
      */
-    public function createTable($table);
+    public function createTable(string $name, array $columns, array $options);
+
+    /**
+     * @param string|array $attribute
+     * @return QueryBuilderInterface
+     */
+    public function addIndex($attribute);
 }
