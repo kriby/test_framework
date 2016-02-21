@@ -22,7 +22,7 @@ class Template implements TemplateInterface
     public function setBody($value)
     {
         ob_start();
-        include ROOT . DS . 'App' . DS . $value . '.phtml';
+        include ROOT . DS . 'App' . DS . str_replace('/', DS, $value) . '.phtml';
         $this->body = ob_get_clean();
     }
 
