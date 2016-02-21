@@ -3,6 +3,7 @@
     <route url="/" class="App\Home\Actions\Home" />
     <route url="/register" class="App\Customer\Actions\Register\Form" />
     <route url="/login" class="App\Customer\Actions\Login\Form" />
+    <route url="/logout" class="App\Customer\Actions\Logout" />
     <route url="/submit_login" class="App\Customer\Actions\Login" />
     <route url="/submit_registration" class="App\Customer\Actions\Register" />
     <route url="/validate" class="App\Customer\Actions\Register\Validator" />

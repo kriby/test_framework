@@ -80,8 +80,15 @@ interface QueryBuilderInterface
     public function createTable(string $name, array $columns, array $options);
 
     /**
+     * @param string $table
      * @param string|array $attribute
      * @return QueryBuilderInterface
      */
-    public function addIndex($attribute);
+    public function addIndex(string $table, $attribute);
+
+    /**
+     * @param string $dbname
+     * @return QueryBuilderInterface
+     */
+    public function useDatabase(string $dbname);
 }

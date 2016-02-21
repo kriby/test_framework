@@ -20,7 +20,7 @@ class Home implements ActionInterface
         if(!Session::has('user')) {
             $this->template->setHeaderLogin('login', __DIR__);
         }
-        $this->template->setBody('home', __DIR__);
+        $this->template->setBody('Home\Views\home');
         $this->template->render();
     }
 }

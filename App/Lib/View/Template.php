@@ -19,10 +19,10 @@ class Template implements TemplateInterface
         return $this->template ;
     }
 
-    public function setBody($value, $dir)
+    public function setBody($value)
     {
         ob_start();
-        include $dir . DS . '..' . DS . '..' . DS . 'Views'. DS . $value . '.phtml';
+        include ROOT . DS . 'App' . DS . $value . '.phtml';
         $this->body = ob_get_clean();
     }
 

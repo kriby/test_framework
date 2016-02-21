@@ -8,31 +8,39 @@
 
 namespace App\Customer\Actions;
 
-use App\Customer\Models\Customer;
+use App\Customer\Models\User;
 use App\Lib\Action\ActionInterface;
+use App\Lib\Request\Request;
 use App\Lib\Response\Response;
+use App\Lib\Session\Session;
 
 
 class Register implements ActionInterface
 {
     /**
-     * @var Customer
+     * @var User
      */
-    private $customer;
+    private $user;
     /**
      * @var Response
      */
     private $response;
+    /**
+     * @var Request
+     */
+    private $request;
 
     /**
      * Form constructor.
      *
-     * @param Customer $customer
+     * @param User $user
+     * @param Request $request
      * @param Response $response
      */
-    public function __construct(Customer $customer, Response $response)
+    public function __construct(User $user, Request $request, Response $response)
     {
-        $this->customer = $customer;
+        $this->user = $user;
+        $this->request = $request;
         $this->response = $response;
     }
 
@@ -41,9 +49,14 @@ class Register implements ActionInterface
      */
     public function execute()
     {
+        $this->user->email = $this->request->getPost('email');
+        $this->user->username = $this->request->getPost('username');
+        $this->user->password = $this->request->getPost('password');
+        $this->user->password = $this->request->getPost('password_confirm');
         if ($this->validate()) {
             try {
-                $this->customer->save();
+                $this->user->save();
+                Session::set('username', $this->user->username);
                 $this->response->redirect('/');
             } catch (\Exception $e) {
                 echo $e->getMessage();
@@ -60,6 +73,6 @@ class Register implements ActionInterface
      */
     private function validate()
     {
-        return $this->customer->getPassword() === $this->customer->getPasswordConfirm();
+        return $this->user->password === $this->user->password_confirm;
     }
 }

@@ -7,23 +7,16 @@
  */
 namespace App\Db;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
 class QueryBuilder implements QueryBuilderInterface
 {
     private $query;
     private $connection;
     /** @var  \PDOStatement */
     private $preparedStatement;
-    private $log;
 
     public function __construct()
     {
         $this->connection = Connection::getInstance()->getConnection();
-        // create a log channel
-        $this->log = new Logger('name');
-        $this->log->pushHandler(new StreamHandler(ROOT . DS . 'error.log', Logger::WARNING));
     }
 
     /**
@@ -130,19 +123,22 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function createDatabase(string $dbname)
     {
-        $this->query = "CREATE DATABASE $dbname; use $dbname";
+        $this->query = "CREATE DATABASE $dbname";
         $this->preparedStatement = $this->connection->prepare($this->query);
         $this->preparedStatement->execute();
         return $this;
     }
 
     /**
+     * @param string $table
      * @param string|array $attribute
      * @return QueryBuilderInterface
      */
-    public function addIndex($attribute)
+    public function addIndex(string $table, $attribute)
     {
-        // TODO: Implement addIndex() method.
+        $this->query = sprintf('ALTER TABLE `%s` ', $table) . "ADD INDEX(`$attribute`)";
+        $this->preparedStatement = $this->connection->prepare($this->query);
+        $this->preparedStatement->execute();
     }
 
     /**
@@ -153,7 +149,7 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function createTable(string $name, array $columns, array $options = [])
     {
-        $this->query = sprintf('CREATE TABLE `%s`(', $name);
+        $this->query = sprintf('CREATE TABLE IF NOT EXISTS `%s`(', $name);
         foreach($columns as $key => &$value) {
             $value = sprintf('`%s` ', $key) . $value;
         }
@@ -161,21 +157,25 @@ class QueryBuilder implements QueryBuilderInterface
         $columns = implode(',', $columns);
 
         $this->query .= "$columns)";
-        foreach($options as $key => &$value) {
-            $value = "$key=$value";
-        }
-        unset($value);
-        $options = implode(' ', $options);
 
+        $options = implode(' ', $options);
         $this->query .= " $options";
-        try {
-            $this->preparedStatement = $this->connection->prepare($this->query);
-            if ($this->preparedStatement->execute() === false) {
-                throw new \PDOException("Database cannot be created.");
-            }
-        } catch (\Exception $e) {
-            $this->log->error('Bar');
-            echo $e->getMessage();
+        $this->preparedStatement = $this->connection->prepare($this->query);
+        if ($this->preparedStatement->execute() === false) {
+            throw new \PDOException("Database cannot be created.");
         }
+        return $this;
+    }
+
+    /**
+     * @param string $dbname
+     * @return QueryBuilderInterface
+     */
+    public function useDatabase(string $dbname)
+    {
+        $this->query = "USE $dbname";
+        $this->preparedStatement = $this->connection->prepare($this->query);
+        $this->preparedStatement->execute();
+        return $this;
     }
 }

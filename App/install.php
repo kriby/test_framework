@@ -31,19 +31,21 @@ class Install
         try {
             $this->queryBuilder
                 ->createDatabase(Config::getDatabaseName())
+                ->useDatabase(Config::getDatabaseName())
                 ->createTable(
                     'users',
                     [
-                        'user_id' => 'smallint(6), NOT NULL AUTO_INCREMENT PRIMARY KEY',
-                        'user_name, varchar(30), NOT NULL',
-                        'email, varchar(30), NOT NULL',
-                        'user_password, char(60), NOT NULL',
+                        'user_id' => 'smallint(6) NOT NULL',
+                        'user_name' => 'varchar(30) NOT NULL',
+                        'email' => 'varchar(30) NOT NULL PRIMARY KEY',
+                        'user_password' => 'char(60) NOT NULL',
                     ],
                     [
                         'ENGINE=InnoDB',
-                        'DEFAULT CHARSET=utf8'
-                    ]
-                );
+                        'DEFAULT CHARSET=utf8',
+                        'AUTO_INCREMENT=1'
+                    ])
+                ->addIndex('users', 'email');
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
