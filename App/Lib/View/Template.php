@@ -3,7 +3,7 @@ namespace App\Lib\View;
 
 class Template implements TemplateInterface
 {
-    const DEFAULT_TEMPLATE = '..\default.phtml';
+    const DEFAULT_TEMPLATE = '..' . DS . 'default.phtml';
 
     protected $headerLogin = '';
     protected $template = self::DEFAULT_TEMPLATE;
