@@ -32,7 +32,7 @@ class Form implements ActionInterface
         if(Session::has('username')) {
             $this->response->redirect('/');
         }
-        $this->template->setBody('Customer\Views\register');
+        $this->template->setBody('Customer/Views/register');
         $this->template->render();
     }
 }
