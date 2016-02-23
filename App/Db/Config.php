@@ -9,26 +9,34 @@ namespace App\Db;
 
 class Config
 {
-    private static $db = 'courses';
-
     public static function getDsn()
     {
-        $db = self::$db;
-        return "mysql:host=localhost; dbname={$db}";
+        $url = self::getUrl();
+        $server = $url["host"];
+        $db = substr($url["path"], 1);
+        return "mysql:host=$server; dbname={$db}";
     }
 
     public static function getUsername()
     {
-        return 'root';
+        $url = self::getUrl();
+        return $url["user"];
     }
 
     public static function getPassword()
     {
-        return '123123q';
+        $url = self::getUrl();
+        return $url["pass"];
     }
 
     public static function getDatabaseName()
     {
-        return self::$db;
+        $url = self::getUrl();
+        return substr($url["path"], 1);
+    }
+
+    private static function getUrl()
+    {
+        return parse_url(getenv("CLEARDB_DATABASE_URL"));
     }
 }
