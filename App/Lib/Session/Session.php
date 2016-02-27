@@ -9,7 +9,7 @@
 namespace App\Lib\Session;
 
 
-class Session
+class Session implements SessionInterface
 {
     /**
      * Sets session value by specified key.
@@ -71,5 +71,20 @@ class Session
     public static function destroy()
     {
         session_destroy();
+    }
+
+    public static function setMessage(string $message)
+    {
+        $_SESSION['message'] = $message;
+    }
+
+    public static function getMessage()
+    {
+        if (!isset($_SESSION['message'])) {
+            return false;
+        }
+        $message = $_SESSION['message'];
+        unset($_SESSION['message']);
+        return $message;
     }
 }

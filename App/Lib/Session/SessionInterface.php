@@ -14,4 +14,8 @@ interface SessionInterface
     public static function delete($key);
 
     public static function destroy();
+
+    public static function setMessage(string $message);
+
+    public static function getMessage();
 }

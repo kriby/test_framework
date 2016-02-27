@@ -8,7 +8,9 @@
 
 namespace App\Customer\Actions;
 
-use App\Customer\Models\User;
+use App\Customer\Models\UserDAO;
+use App\Customer\Models\UserService;
+use App\Customer\Models\UserVO;
 use App\Lib\Action\ActionInterface;
 use App\Lib\Request\Request;
 use App\Lib\Response\Response;
@@ -18,30 +20,52 @@ use App\Lib\Session\Session;
 class Register implements ActionInterface
 {
     /**
-     * @var User
-     */
-    private $user;
-    /**
      * @var Response
      */
     private $response;
+
     /**
      * @var Request
      */
     private $request;
 
     /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @var UserDAO
+     */
+    private $userDAO;
+
+    /**
+     * @var UserVO
+     */
+    private $userVO;
+
+    /**
      * Form constructor.
      *
-     * @param User $user
+     * @param UserService $userService
+     * @param UserDAO $userDAO
+     * @param UserVO $userVO
      * @param Request $request
      * @param Response $response
+     * @internal param User $user
      */
-    public function __construct(User $user, Request $request, Response $response)
-    {
-        $this->user = $user;
+    public function __construct(
+        UserService $userService,
+        UserDAO $userDAO,
+        UserVO $userVO,
+        Request $request,
+        Response $response
+    ) {
         $this->request = $request;
         $this->response = $response;
+        $this->userService = $userService;
+        $this->userDAO = $userDAO;
+        $this->userVO = $userVO;
     }
 
     /**
@@ -49,14 +73,14 @@ class Register implements ActionInterface
      */
     public function execute()
     {
-        $this->user->email = $this->request->getPost('email');
-        $this->user->username = $this->request->getPost('username');
-        $this->user->password = $this->request->getPost('password');
-        $this->user->password = $this->request->getPost('password_confirm');
+        $this->userVO->setEmail($this->request->getPost('email'));
+        $this->userVO->setUserName($this->request->getPost('username'));
+        $this->userVO->setUserPassword($this->request->getPost('password'));
         if ($this->validate()) {
             try {
-                $this->user->save();
-                Session::set('username', $this->user->username);
+                $this->userDAO->save($this->userVO);
+                Session::setMessage('Thank you for registering on our website!');
+                Session::set('username', $this->userVO->getUserName());
                 $this->response->redirect('/');
             } catch (\Exception $e) {
                 echo $e->getMessage();
@@ -73,6 +97,9 @@ class Register implements ActionInterface
      */
     private function validate()
     {
-        return $this->user->password === $this->user->password_confirm;
+        $password = trim($this->request->getPost('password'));
+        $confirm = trim($this->request->getPost('password_confirm'));
+//        return $password === $confirm;
+        return true;
     }
 }

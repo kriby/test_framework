@@ -45,7 +45,9 @@
         </ul>
     </div>
 </nav>
-
+<p class="bg-success">
+    <?php echo \App\Lib\Session\Session::getMessage() ?>
+</p>
 <div class="container">
     <?php echo $this->body ?>
 </div>

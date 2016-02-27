@@ -7,7 +7,9 @@
  */
 namespace App\Customer\Actions;
 
-use App\Customer\Models\User;
+use App\Customer\Models\UserDAO;
+use App\Customer\Models\UserService;
+use App\Customer\Models\UserVO;
 use App\Lib\Action\ActionInterface;
 use App\Lib\Request\Request;
 use App\Lib\Response\Response;
@@ -16,30 +18,52 @@ use App\Lib\Session\Session;
 class Login implements ActionInterface
 {
     /**
-     * @var User
+     * @var UserService
      */
-    private $user;
+    private $userService;
+
     /**
      * @var Response
      */
     private $response;
+
     /**
      * @var Request
      */
     private $request;
 
     /**
+     * @var UserDAO
+     */
+    private $userDAO;
+
+    /**
+     * @var UserVO
+     */
+    private $userVO;
+
+    /**
      * Form constructor.
      *
-     * @param User $user
+     * @param UserService $userService
+     * @param UserDAO $userDAO
+     * @param UserVO $userVO
      * @param Request $request
      * @param Response $response
+     * @internal param User $user
      */
-    public function __construct(User $user, Request $request, Response $response)
-    {
-        $this->user = $user;
+    public function __construct(
+        UserService $userService,
+        UserDAO $userDAO,
+        UserVO $userVO,
+        Request $request,
+        Response $response
+    ) {
+        $this->userService = $userService;
         $this->response = $response;
         $this->request = $request;
+        $this->userDAO = $userDAO;
+        $this->userVO = $userVO;
     }
 
     /**
@@ -47,10 +71,17 @@ class Login implements ActionInterface
      */
     public function execute()
     {
-        $user = $this->user->findBy('email', $this->request->getPost('email'));
+        $user = $this->userDAO->getByUserEmail($this->request->getPost('email'));
         try {
-            $this->user->verify($user);
-            Session::set('username', $user['user_name']);
+            if(!$user) {
+                throw new \Exception('User with specified email does not exist.');
+            }
+            $this->userService->verify(
+                $this->request->getPost('password'),
+                $user->getUserPassword()
+            );
+            Session::setMessage('You have successfully logged in!');
+            Session::set('username', $user->getUserName());
             $this->response->redirect('/');
         } catch (\Exception $e) {
             echo $e->getMessage();
