@@ -35,17 +35,15 @@ class Install
                 ->createTable(
                     'users',
                     [
-                        'user_id' => 'smallint(6) NOT NULL',
+                        'user_id' => 'smallint(6) NOT NULL PRIMARY KEY AUTO_INCREMENT',
                         'user_name' => 'varchar(30) NOT NULL',
-                        'email' => 'varchar(30) NOT NULL PRIMARY KEY',
+                        'email' => 'varchar(30) NOT NULL',
                         'user_password' => 'char(60) NOT NULL',
                     ],
                     [
                         'ENGINE=InnoDB',
-                        'DEFAULT CHARSET=utf8',
-                        'AUTO_INCREMENT=1'
-                    ])
-                ->addIndex('users', 'email');
+                        'DEFAULT CHARSET=utf8'
+                    ]);
         } catch (\Exception $e) {
             echo $e->getMessage();
         }

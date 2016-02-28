@@ -6,7 +6,7 @@
  * Time: 20:02
  */
 
-namespace App\Customer\Actions;
+namespace App\User\Actions;
 
 use App\Lib\Action\ActionInterface;
 use App\Lib\Response\Response;

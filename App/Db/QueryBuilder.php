@@ -123,7 +123,7 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function createDatabase(string $dbname)
     {
-        $this->query = "CREATE DATABASE $dbname";
+        $this->query = "CREATE DATABASE IF NOT EXISTS $dbname";
         $this->preparedStatement = $this->connection->prepare($this->query);
         $this->preparedStatement->execute();
         return $this;
@@ -162,7 +162,7 @@ class QueryBuilder implements QueryBuilderInterface
         $this->query .= " $options";
         $this->preparedStatement = $this->connection->prepare($this->query);
         if ($this->preparedStatement->execute() === false) {
-            throw new \PDOException("Database cannot be created.");
+            throw new \PDOException("Table cannot be created.");
         }
         return $this;
     }

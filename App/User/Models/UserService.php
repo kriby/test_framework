@@ -1,5 +1,5 @@
 <?php
-namespace App\Customer\Models;
+namespace App\User\Models;
 
 class UserService
 {
@@ -16,14 +16,9 @@ class UserService
      * @param string $password
      * @param string $hash
      * @return bool
-     * @throws \Exception
      */
     public function verify(string $password, string $hash)
     {
-        if (password_verify($password, $hash)) {
-            return true;
-        } else {
-            throw new \Exception('Invalid username/password. Check your credentials.');
-        }
+        return password_verify($password, $hash);
     }
 }

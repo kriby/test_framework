@@ -45,9 +45,7 @@
         </ul>
     </div>
 </nav>
-<p class="bg-success">
-    <?php echo \App\Lib\Session\Session::getMessage() ?>
-</p>
+<div id="successAlert" class="alert alert-success"><?php echo \App\User\Models\UserVO::getMessage() ?></div>
 <div class="container">
     <?php echo $this->body ?>
 </div>
@@ -56,5 +54,12 @@
 <footer class="text-center">
     <p>&copy; 2015 Rliukshyn, Inc.</p>
 </footer>
+<script type = "text/javascript">
+    $("#successAlert:empty").hide();
+
+    $("#successAlert").delay(3000).slideUp(200, function() {
+        $(this).alert('close');
+    });
+</script>
 </body>
 </html>

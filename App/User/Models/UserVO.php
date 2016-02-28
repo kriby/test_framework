@@ -6,14 +6,37 @@
  * Time: 20:29
  */
 
-namespace App\Customer\Models;
+namespace App\User\Models;
 
+
+use App\Lib\Session\Session;
 
 class UserVO
 {
     private $email;
     private $user_name;
     private $user_password;
+
+    /**
+     * @return mixed
+     */
+    public static function getMessage()
+    {
+        if (!Session::has('message')) {
+            return false;
+        }
+        $message = Session::get('message');
+        Session::delete('message');
+        return $message;
+    }
+
+    /**
+     * @param mixed $message
+     */
+    public static function setMessage($message)
+    {
+        Session::set('message', $message);
+    }
 
     /**
      * @return mixed

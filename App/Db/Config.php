@@ -9,7 +9,7 @@ namespace App\Db;
 
 class Config
 {
-    private static $db = 'courses';
+    private static $db = 'framework';
 
     public static function getDsn()
     {

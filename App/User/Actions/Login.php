@@ -5,11 +5,11 @@
  * Date: 12/21/2015
  * Time: 10:25
  */
-namespace App\Customer\Actions;
+namespace App\User\Actions;
 
-use App\Customer\Models\UserDAO;
-use App\Customer\Models\UserService;
-use App\Customer\Models\UserVO;
+use App\User\Models\UserDAO;
+use App\User\Models\UserService;
+use App\User\Models\UserVO;
 use App\Lib\Action\ActionInterface;
 use App\Lib\Request\Request;
 use App\Lib\Response\Response;
@@ -73,8 +73,15 @@ class Login implements ActionInterface
     {
         $user = $this->userDAO->getByUserEmail($this->request->getPost('email'));
         try {
-            if(!$user) {
+            if(!$user->getEmail()) {
                 throw new \Exception('User with specified email does not exist.');
+            }
+            $isPasswordVerified = $this->userService->verify(
+                $this->request->getPost('password'),
+                $user->getUserPassword()
+            );
+            if (!$isPasswordVerified) {
+                throw new \Exception('Invalid username/password. Check your credentials.');
             }
             $this->userService->verify(
                 $this->request->getPost('password'),

@@ -6,11 +6,11 @@
  * Time: 20:02
  */
 
-namespace App\Customer\Actions;
+namespace App\User\Actions;
 
-use App\Customer\Models\UserDAO;
-use App\Customer\Models\UserService;
-use App\Customer\Models\UserVO;
+use App\User\Models\UserDAO;
+use App\User\Models\UserService;
+use App\User\Models\UserVO;
 use App\Lib\Action\ActionInterface;
 use App\Lib\Request\Request;
 use App\Lib\Response\Response;
@@ -75,11 +75,13 @@ class Register implements ActionInterface
     {
         $this->userVO->setEmail($this->request->getPost('email'));
         $this->userVO->setUserName($this->request->getPost('username'));
-        $this->userVO->setUserPassword($this->request->getPost('password'));
+        $this->userVO->setUserPassword(
+            $this->userService->hashPassword($this->request->getPost('password'))
+        );
         if ($this->validate()) {
             try {
                 $this->userDAO->save($this->userVO);
-                Session::setMessage('Thank you for registering on our website!');
+                UserVO::setMessage('Thank you for registering on our website!');
                 Session::set('username', $this->userVO->getUserName());
                 $this->response->redirect('/');
             } catch (\Exception $e) {
@@ -92,14 +94,11 @@ class Register implements ActionInterface
 
     /**
      * Validates user input.
-     *
-     * @return bool
      */
-    private function validate()
+    private function validate() : bool
     {
         $password = trim($this->request->getPost('password'));
         $confirm = trim($this->request->getPost('password_confirm'));
-//        return $password === $confirm;
-        return true;
+        return $password == $confirm;
     }
 }

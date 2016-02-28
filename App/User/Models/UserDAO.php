@@ -6,7 +6,7 @@
  * Time: 20:31
  */
 
-namespace App\Customer\Models;
+namespace App\User\Models;
 
 use App\Db\Config;
 use App\Db\QueryBuilderInterface;
@@ -85,7 +85,7 @@ class UserDAO
         ];
         $request = $this->queryBuilder->insert(self::TABLE)->values($params);
         if (!$request->execute($params)) {
-            throw new \Exception('Customer cannot be saved');
+            throw new \Exception('User cannot be saved');
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Customer\Actions\Register;
+namespace App\User\Actions\Register;
 
 use App\Lib\Action\ActionInterface;
 use App\Lib\Response\Response;
@@ -32,7 +32,7 @@ class Form implements ActionInterface
         if(Session::has('username')) {
             $this->response->redirect('/');
         }
-        $this->template->setBody('Customer/Views/register');
+        $this->template->setBody('User/Views/register');
         $this->template->render();
     }
 }

@@ -52,6 +52,7 @@ class Connection
             return new \PDO($dsn, $username, $password);
         } catch (\PDOException $e) {
             echo $e->getMessage();
+            die();
         }
     }
 }
