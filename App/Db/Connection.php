@@ -33,6 +33,15 @@ class Connection
     }
 
     /**
+     * Prevent cloning of the instance
+     *
+     * @return void
+     */
+    private function __clone()
+    {
+    }
+
+    /**
      * Connection constructor.
      */
     private function __construct()
